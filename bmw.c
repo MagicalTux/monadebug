@@ -609,6 +609,7 @@ static const sph_u32 final_s[16] = {
 static void
 bmw32_init(sph_bmw_small_context *sc, const sph_u32 *iv)
 {
+	memset(sc, 0, sizeof(sph_bmw_small_context)); // FIXME Fix number 1: sph_bmw_small_context is not properly initialized
 	memcpy(sc->H, iv, sizeof sc->H);
 	sc->ptr = 0;
 #if SPH_64
