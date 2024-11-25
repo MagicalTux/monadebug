@@ -1,12 +1,17 @@
 #!/bin/make
-CC=/pkg/main/sys-devel.gcc.core/bin/x86_64-pc-linux-gnu-gcc
-CFLAGS=-Wall -g -ggdb -O2 -pipe -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -D__STDC_FORMAT_MACROS -fPIC -pthread -ftrivial-auto-var-init=zero
+#CC=/pkg/main/sys-devel.gcc.core/bin/x86_64-pc-linux-gnu-gcc
+CFLAGS=-Wall -g -ggdb -O2 -pipe -Wall -Wextra -Wuninitialized -Wmaybe-uninitialized -Wshadow -Wstrict-aliasing=2
 
 TARGET=monadebug
 OBJECTS=bmw.o main.o
+
+.PHONY: clean test
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
 	$(RM) $(OBJECTS)
+
+test: $(TARGET)
+	./monadebug
