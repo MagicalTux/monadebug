@@ -1,6 +1,6 @@
 #!/bin/make
 #CC=/pkg/main/sys-devel.gcc.core/bin/x86_64-pc-linux-gnu-gcc
-CFLAGS=-Wall -g -ggdb -O2 -pipe -Wall -Wextra -Wuninitialized -Wmaybe-uninitialized -Wshadow -Wstrict-aliasing=2
+CFLAGS=-Wall -g -ggdb -O2 -pipe -Wall # -fopt-info-vec-missed -fopt-info-missed -fopt-info # -fno-strict-aliasing
 
 TARGET=monadebug
 OBJECTS=bmw.o main.o

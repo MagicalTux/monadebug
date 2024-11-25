@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include "sph_bmw.h"
 
@@ -10,18 +11,13 @@ void dumpHex(void *ptr, int ln) {
 	printf("\n");
 }
 
-inline static void __attribute__((optimize("O0"))) poisonStack(char v) {
-	char st[65536];
-	memset(st, v, sizeof(st)); // 0xAA is a common pattern for debugging
-}
-
 int main() {
 	unsigned char in[32] = {0x52, 0x57, 0x41, 0xcc, 0xfd, 0x92, 0x26, 0x03, 0x55, 0x37, 0x5c, 0x59, 0x72, 0xa0, 0x72, 0x46, 0x2c, 0x35, 0x11, 0x3a, 0x61, 0x91, 0xfd, 0xf1, 0xfd, 0xa1, 0x78, 0xa0, 0x89, 0x09, 0x5a, 0x3b};
-	uint32_t hashA[8];
+	unsigned char expectOut[32] = {0xb2, 0x5b, 0x28, 0x23, 0x50, 0xcb, 0xd4, 0x20, 0xc6, 0x1c, 0x34, 0x00, 0xd2, 0xd8, 0xcf, 0x1a, 0x66, 0x5b, 0x72, 0xff, 0x52, 0xc1, 0x98, 0x6a, 0xd4, 0xe4, 0xb6, 0x05, 0x1c, 0x06, 0x00, 0x00};
+	unsigned char hashA[32];
 	sph_bmw256_context ctx_bmw;
-	//sph_bmw256_context ctx_bmw2;
 
-	printf("input");
+	printf("input ");
 	dumpHex(in, sizeof(in));
 
 	//poisonStack(0);
@@ -32,7 +28,22 @@ int main() {
 	sph_bmw256_close(&ctx_bmw, hashA);
 
 	// output
+	printf("output ");
 	dumpHex(hashA, 32);
+
+	bool isGood = true;
+	for(int i = 0; i < 32; i++) {
+		if (hashA[i] != expectOut[i]) {
+			isGood = false;
+			break;
+		}
+	}
+
+	if (!isGood) {
+		printf("The hash is NOT GOOD, there's still a bug\n");
+	} else {
+		printf("This was the expected value\n");
+	}
 
 	return 0;
 }
